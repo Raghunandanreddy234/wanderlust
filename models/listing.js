@@ -1,28 +1,42 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const Review = require("./reviews.js");
 
 const listingSchema = new Schema({
-    title: {
-        type: String,
-        required: true,
-    },
-    description: String,
+  title: {
+    type: String,
+    required: true,
+  },
+  description: String,
 
-    image: { // 'image' field is now an object
-        url: {
-            type: String,
-            // default aur set function ko yahan se hata diya gaya hai
-        },
-      filename: {
-       type: String, 
-       default: "listingimage",
-      }
+  image: {
+    url: {
+      type: String,
     },
+    filename: {
+      type: String,
+      default: "listingimage",
+    },
+  },
 
-    price: Number,
-    location: String,
-    country: String,
+  price: Number,
+  location: String,
+  country: String,
+
+  reviews: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Review", 
+    },
+  ],
 });
 
+listingSchema.post("findOneAndDelete", async (listing) => {
+  if(listing) {
+     await Review.deleteMany({ _id: { $in: listing.reviews } });
+  }
+});
+
+
 const Listing = mongoose.model("Listing", listingSchema);
-module.exports = Listing;
+module.exports = Listing;

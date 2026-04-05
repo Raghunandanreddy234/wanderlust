@@ -73,13 +73,10 @@ body {
       opacity:1;
 }
 
-
-.card {
+.listing-card {
     border: none !important;
     margin-bottom: 2rem;
-   
 }
-
 
 .card-img-top {
     border-radius: 1.3rem !important;

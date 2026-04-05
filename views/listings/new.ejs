@@ -31,10 +31,12 @@
          <label for="image" class="form-label"><b><i>Image:</i></b></label>
       <input
   name="listing[image][url]"
-  placeholder="Enter image URL/link"
+  placeholder="https://example.com/photo.jpg"
   class="form-control"
-  type="text" 
+  type="url"
+  required
 />
+      <div class="invalid-feedback">Please enter a valid image URL.</div>
       </div>
       
        <div class="row">
