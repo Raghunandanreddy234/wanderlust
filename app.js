@@ -1,3 +1,5 @@
+// chnages in listings/new.js
+// atlas databse setup
 if(process.env.NODE_ENV != "production") {
     require('dotenv').config();
 }
