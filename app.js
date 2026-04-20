@@ -25,7 +25,7 @@ const reviewsRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
 // MongoDB connection
-const MONGO_URL = "mongodb+srv://Raghunandanreddy:raghu123@cluster0.lcfxnhs.mongodb.net/majorproject";
+const MONGO_URL = "mongodb+srv://Raghunandanreddy:raghu123@cluster0.lcfxnhs.mongodb.net/airbnb";
 
 async function main() {
     await mongoose.connect(MONGO_URL);
