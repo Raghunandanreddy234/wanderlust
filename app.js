@@ -1,3 +1,5 @@
+// chnages in listings/new.js
+// atlas databse setup
 if(process.env.NODE_ENV != "production") {
     require('dotenv').config();
 }
@@ -23,7 +25,7 @@ const reviewsRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
 // MongoDB connection
-const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+const MONGO_URL = "mongodb+srv://Raghunandanreddy:raghu123@cluster0.lcfxnhs.mongodb.net/majorproject";
 
 async function main() {
     await mongoose.connect(MONGO_URL);
