@@ -33,17 +33,21 @@
           <div class="invalid-feedback">Write a short description!</div>
         </div>
 
-        <div class="mb-4">
-          <img 
-            src="<%= listing.image.url %>"
-            class="img-fluid mb-3"
-          />
-        </div>
+        <div class="mb-3">
+          Original Listing image:
+          <br/>
+         <img 
+           src="<%= originalImageUrl %>" 
+            class="img-fluid"
+            style="max-height: 200px; object-fit: cover;"
+            />
 
-        <div class="mb-4">
+            <br />
+
+          <div class="mb-4">
           <label for="image" class="form-label"><b><i>Upload New Image </i></b></label>
           <input 
-            name="listing[image][url]"
+            name="image"
             type="file"
             class="form-control"
            
