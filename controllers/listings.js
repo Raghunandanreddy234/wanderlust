@@ -1,5 +1,4 @@
 const Listing = require("../models/listing.js");
-const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 
 module.exports.index = async (req, res) => {
     const allListings = await Listing.find({});
@@ -25,7 +24,7 @@ module.exports.showListing =  async (req, res) => {
        return  res.redirect("/listings");
     }
       console.log(listing);
-     res.render("listings/show", { listing });
+     res.render("listings/show", { listing, MAPTILER_API_KEY:process.env.MAPTILER_API_KEY});
 };
 
 module.exports.createListing = (async (req, res) => {

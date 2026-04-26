@@ -1,12 +1,6 @@
+const map = L.map('map').setView([12.9716, 77.5946], 10);
 
-  document.addEventListener("DOMContentLoaded", function () {
-    var map = L.map('map').setView([17.3850, 78.4867], 13);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-
-    L.marker([17.3850, 78.4867]).addTo(map)
-      .bindPopup("You are here!")
-      .openPopup();
-  });
+// MapTiler tiles with your key
+L.tileLayer(`https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=${MAPTILER_KEY}`, {
+  attribution: '&copy; MapTiler & OpenStreetMap contributors'
+}).addTo(map);
