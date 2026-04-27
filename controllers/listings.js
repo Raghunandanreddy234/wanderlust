@@ -30,7 +30,7 @@ module.exports.showListing =  async (req, res) => {
 module.exports.createListing = (async (req, res) => {
     let coordinate = await geocodingClient.forwardGeocode({
     query: 'New Delhi, India',
-     limit: 2
+     limit: 1,
    })
      .send();
 
