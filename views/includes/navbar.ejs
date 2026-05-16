@@ -1,32 +1,186 @@
+<style>
+  .search-btn {
+    background-color: #fe424d;
+    color: #ffffff;
+    margin-left: 0.5rem;
+    border-radius: 25px;
+    
+    border: none;
+  }
+
+  .search-btn:hover {
+    background-color: #fe424d;
+    color: #ffffff;
+  }
+
+  .search-container {
+    position: relative;
+    width: 320px;
+  }
+
+  /* Search bar */
+  .search-box {
+    width: 100%;
+    border: 1px solid #ced4da;
+    border-radius: 25px;
+    padding: 0.6rem 1rem;
+    background-color: white;
+    cursor: pointer;
+  }
+
+  /* Dropdown */
+  .dropdown-menu-custom {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    overflow: hidden;
+    display: none;
+    z-index: 1000;
+  }
+
+  .dropdown-item-custom {
+    padding: 0.8rem 1rem;
+    cursor: pointer;
+  }
+
+  .dropdown-item-custom:hover {
+    background-color: #f2f2f2;
+  }
+
+  /* Show dropdown */
+  .search-container.active .dropdown-menu-custom {
+    display: block;
+  }
+</style>
+
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/"><i class="fa-regular fa-compass"></i></a>
-    <button class="navbar-toggler" 
-    type="button" 
-    data-bs-toggle="collapse" 
-    data-bs-target="#navbarNavAltMarkup" 
-    aria-controls="navbarNavAltMarkup" 
-    aria-expanded="false" 
-    aria-label="Toggle navigation">
+
+    <!-- Logo -->
+    <a class="navbar-brand" href="/">
+      <i class="fa-regular fa-compass"></i>
+    </a>
+
+    <!-- Toggle -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNavAltMarkup"
+    >
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+
+      <!-- Left -->
       <div class="navbar-nav">
-        <a class="nav-link active"  href="/">Home</a>
-        <a class="nav-link" href="/listings/">All Listings</a>
-        <a class="nav-link" href="/listings/new">Add new listings</a>
+        <a class="nav-link" href="/listings/">Explore</a>
       </div>
-      
+
+      <!-- Search -->
       <div class="navbar-nav ms-auto">
-        <% if(!currUser){ %>
-        <a class="nav-link active"  href="/signup">Sign up</a>
-        <a class="nav-link" href="/login">Log in</a>
-        <% }  %>
-        <% if(currUser){ %>
-        <span class="navbar-text"></span>
-        <a class="nav-link" href="/logout">Log out</a>
-        <% } %>
+
+        <form class="d-flex align-items-center" role="search">
+
+          <div class="search-container" id="searchContainer">
+
+            <!-- Search Bar -->
+            <input
+              type="text"
+              id="searchInput"
+              class="search-box"
+              placeholder="Search destinations"
+              readonly
+            />
+
+            <!-- Custom Dropdown -->
+            <div class="dropdown-menu-custom">
+
+              <div class="dropdown-item-custom">All</div>
+              <div class="dropdown-item-custom">Trending</div>
+              <div class="dropdown-item-custom">Rooms</div>
+              <div class="dropdown-item-custom">Iconic cities</div>
+              <div class="dropdown-item-custom">Mountains</div>
+              <div class="dropdown-item-custom">Amazing pools</div>
+              <div class="dropdown-item-custom">Camping</div>
+              <div class="dropdown-item-custom">Farms</div>
+              <div class="dropdown-item-custom">Boats</div>
+              <div class="dropdown-item-custom">Domes</div>
+
+            </div>
+
+          </div>
+
+          <button class="btn search-btn" type="submit">
+            Search
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+
+        </form>
+
       </div>
+
+      <!-- Right -->
+      <div class="navbar-nav ms-auto">
+
+        <a class="nav-link" href="/listings/new">
+          Airbnb your home
+        </a>
+
+        <% if(typeof currUser === 'undefined' || !currUser){ %>
+
+          <a class="nav-link active" href="/signup">
+            <b>Sign up</b>
+          </a>
+
+          <a class="nav-link" href="/login">
+            <b>Log in</b>
+          </a>
+
+        <% } %>
+
+        <% if(typeof currUser !== 'undefined' && currUser){ %>
+
+          <a class="nav-link" href="/logout">
+            Log out
+          </a>
+
+        <% } %>
+
+      </div>
+
     </div>
   </div>
 </nav>
+
+<script>
+  const searchContainer = document.getElementById("searchContainer");
+  const searchInput = document.getElementById("searchInput");
+  const items = document.querySelectorAll(".dropdown-item-custom");
+
+  // Open dropdown on click anywhere in search bar
+  searchInput.addEventListener("click", () => {
+    searchContainer.classList.toggle("active");
+  });
+
+  // Select item and show in search bar
+  items.forEach((item) => {
+    item.addEventListener("click", () => {
+      searchInput.value = item.innerText;
+      searchContainer.classList.remove("active");
+    });
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener("click", (e) => {
+    if (!searchContainer.contains(e.target)) {
+      searchContainer.classList.remove("active");
+    }
+  });
+
+</script>

@@ -7,12 +7,13 @@ const listingSchema = new Schema({
     type: String,
     required: true,
   },
+
   description: String,
 
   image: {
     url: {
       type: String,
-      default: "",   
+      default: "",
     },
     filename: {
       type: String,
@@ -31,16 +32,34 @@ const listingSchema = new Schema({
     },
   ],
 
+  geometry: {
+    type: {
+      type: String,
+      enum: ["Point"],
+      default: "Point",
+    },
+    coordinates: {
+      type: [Number], // [longitude, latitude]
+      default: [0, 0],
+    },
+  },
+
+  
   owner: {
     type: Schema.Types.ObjectId,
     ref: "User",
+  },
+  coordinates: {
+    type: [Number],
+    requires:true
   }
 });
 
-
 listingSchema.post("findOneAndDelete", async (listing) => {
   if (listing && listing.reviews.length > 0) {
-    await Review.deleteMany({ _id: { $in: listing.reviews } });
+    await Review.deleteMany({
+      _id: { $in: listing.reviews }
+    });
   }
 });
 
