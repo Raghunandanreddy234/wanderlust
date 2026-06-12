@@ -1,4 +1,3 @@
-
 // atlas databse setup
 if(process.env.NODE_ENV != "production") {
     require('dotenv').config();
@@ -11,7 +10,7 @@ const mongoose = require('mongoose');
 const Listing = require('./models/listing.js'); 
 const path = require('path');
 const ejsMate = require("ejs-mate");
-const wrapAsync = require("./utils/WrapAsync.js");
+const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
 const methodOverride = require("method-override");
 const session = require("express-session");
@@ -25,19 +24,20 @@ const listingsRouter = require("./routes/listing.js");
 const reviewsRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
-// MongoDB connection
-const MONGO_URL = "mongodb+srv://Raghunandanreddy:raghu123@cluster0.lcfxnhs.mongodb.net/airbnb";
-
+//================================== MongoDB connection=========================================
+const dbUrl = process.env.ATLASDB_URL;
 
 async function main() {
-    await mongoose.connect(MONGO_URL);
+  await mongoose.connect(dbUrl);
 }
 
 main()
-    .then(() => console.log("Connected to MongoDB"))
-    .catch((err) => console.log(err));
+  .then(() => {
+    console.log("MongoDB connection successful");
+  })
+  .catch((err) => console.log(err));
 
-// View engine
+//===================================== View engine============================================
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.engine("ejs", ejsMate);
@@ -47,31 +47,31 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
-// Session config
+//=================================== Session config=======================================
 const store = MongoStore.create({
-    mongoUrl: MONGO_URL,
-    crypto: {
-        secret: process.env.SECRET || "mysupersecretcode"
-    },
-    touchAfter: 24 * 3600,
+  mongoUrl: dbUrl,
+  crypto: {
+    secret: process.env.SECRET,
+  },
+  touchAfter: 24 * 3600,
 });
 
 store.on("error", (err) => {
-    console.log("ERROR in MONGO SESSION STORE", err);
+  console.log("SESSION STORE ERROR", err);
 });
-
+//=============================mongoose session======================================
 const sessionOptions = {
-    store,
-    secret: process.env.SECRET || "mysupersecretcode",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
-    },
+  store,
+  secret: process.env.SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+    secure: false,
+  },
 };
-
 app.use(session(sessionOptions));
 app.use(flash());
 
@@ -91,7 +91,7 @@ app.use((req, res, next) => {
     next();
 });
 
-// Routes
+//============================ Routes========================================
 app.get('/', (req, res) => {
     res.render('users/login');
 });
@@ -107,18 +107,18 @@ app.get("/demouser", async (req, res) => {
     res.send(registeredUser);
 });
 
-// 404
+//================================== 404=========================================
 app.all("/*splat", (req, res, next) => {
     next(new ExpressError(404, "Page not found!"));
 });
 
-// Error handler
+//============================== Error handler==================================
 app.use((err, req, res, next) => {
     let { statusCode = 500, message = "something went wrong" } = err;
     res.status(statusCode).render("error.ejs", { err, message });
 });
 
-// Server
+//============================== Server==============================================
 app.listen(3000, () => {
     console.log("Server is running on port 3000");
 });
