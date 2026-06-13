@@ -21,19 +21,33 @@ module.exports.isLoggedIn = (req, res, next) => {
     next();
    };
 
-   module.exports.isOwner = async(req, res, next) => {
-     let { id } = req.params;
-     let listing = await Listing.findById(id);
-     if (!listing || !res.locals.currUser) {
-       req.flash("error", "You do not have permission to do that.");
-       return res.redirect(`/listings/${id}`);
-     }
-     if (!listing.owner.equals(res.locals.currUser._id)) {
-       req.flash("error", "You are not the owner of this listing");
-       return res.redirect(`/listings/${id}`);
-     }
-     next();
-   };
+   module.exports.isOwner = (req, res, next) => {
+    (async () => {
+        let { id } = req.params;
+        let listing = await Listing.findById(id);
+        if (!listing || !res.locals.currUser) {
+            req.flash("error", "You do not have permission to do that.");
+            return res.redirect(`/listings/${id}`);
+        }
+        if (!listing.owner.equals(res.locals.currUser._id)) {
+            req.flash("error", "You are not the owner of this listing");
+            return res.redirect(`/listings/${id}`);
+        }
+        next();
+    })().catch(next);
+};
+
+module.exports.isreviewAuthor = (req, res, next) => {
+    (async () => {
+        let { id, reviewId } = req.params;
+        let review = await Review.findById(reviewId);
+        if (!review.author.equals(res.locals.currUser._id)) {
+            req.flash("error", "you did not create this review");
+            return res.redirect(`/listings/${id}`);
+        }
+        next();
+    })().catch(next);
+};
 
 
    module.exports.validateListing = (req, res, next) => {
